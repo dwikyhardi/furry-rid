@@ -42,21 +42,20 @@ $app->post('/', function ($request, $response)
 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
 
-	$data = json_decode($body, true);
-	foreach ($data['events'] as $event)
 	{
-				// send same message as reply to user
-				$result = $bot->replyText($event['replyToken'], $event['message']['woooooo']);
-
-				// or we can use pushMessage() instead to send reply message
-				// $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($event['message']['text']);
-				// $result = $bot->pushMessage($event['source']['userId'], $textMessageBuilder);
-				
-				return $result->getHTTPStatus() . ' ' . $result->getRawBody();
-			
-		
-	}
-
+  "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
+  "type": "message",
+  "timestamp": 1462629479859,
+  "source": {
+    "type": "user",
+    "userId": "U206d25c2ea6bd87c17655609a1c37cb8"
+  },
+  "message": {
+    "id": "325708",
+    "type": "text",
+    "text": "Hello, world"
+  }
+}
 });
 
 // $app->get('/push/{to}/{message}', function ($request, $response, $args)
