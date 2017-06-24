@@ -21,41 +21,38 @@ $app->get('/', function ($request, $response) {
 
 $app->post('/', function ($request, $response)
 {
-	// get request body and line signature header
-	$body 	   = file_get_contents('php://input');
-	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
+  // get request body and line signature header
+  $body      = file_get_contents('php://input');
+  $signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
 
-	// log body and signature
-	file_put_contents('php://stderr', 'Body: '.$body);
-
-	// is LINE_SIGNATURE exists in request header?
-	if (empty($signature)){
-		return $response->withStatus(400, 'Signature not set');
-	}
-
-	// is this request comes from LINE?
-	if($_ENV['PASS_SIGNATURE'] == false && ! SignatureValidator::validateSignature($body, $_ENV['CHANNEL_SECRET'], $signature)){
-		return $response->withStatus(400, 'Invalid signature');
-	}
-
-	// init bot
-	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
-	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-
-	{
-  "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
-  "type": "message",
-  "timestamp": 1462629479859,
-  "source": {
-    "type": "user",
-    "userId": "U206d25c2ea6bd87c17655609a1c37cb8"
-  },
-  "message": {
-    "id": "325708",
-    "type": "text",
-    "text": "Hello, world"
+  // is LINE_SIGNATURE exists in request header?
+  if (empty($signature)){
+    return $response->withStatus(400, 'Signature not set');
   }
-}
+
+  // is this request comes from LINE?
+  if($_ENV['PASS_SIGNATURE'] == false && ! SignatureValidator::validateSignature($body, $_ENV['CHANNEL_SECRET'], $signature))
+  {
+    return $response->withStatus(400, 'Invalid signature');
+  }
+
+  // init bot
+  $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
+  $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
+
+  $data = json_decode($body, true);
+
+  foreach ($data['events'] as $event) {
+    if ($event['type'] == 'message') {
+      if($event['message']['type'] == 'text') {
+        // send same message as reply to user
+        $result = $bot->replyText($event['replyToken'],
+  $event['message']['text']);
+        return $result->getHTTPStatus() . ' ' .
+    $result->getRawBody();
+      }
+    }
+  }
 });
 
 // $app->get('/push/{to}/{message}', function ($request, $response, $args)
