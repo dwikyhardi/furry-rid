@@ -16,7 +16,7 @@ $app = new Slim\App($configs);
 
 /* ROUTES */
 $app->get('/', function ($request, $response) {
-	return "Lanjutkan!";
+	return "Aing Pusing!!!!!";
 });
 
 $app->post('/', function ($request, $response)
@@ -46,7 +46,8 @@ $app->post('/', function ($request, $response)
     if ($event['type'] == 'message') {
       if($event['message']['type'] == 'text') {
         // send same message as reply to user
-        $result = $bot->replyText("kampret");
+        $result = $bot->replyText($event['replyToken'],
+  $event['message']['text']);
         return $result->getHTTPStatus() . ' ' . '' .
     $result->getRawBody();
       }
