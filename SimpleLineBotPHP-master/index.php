@@ -50,12 +50,13 @@ $app->post('/', function ($request, $response)
 
         foreach ($this->texts as $text) {
             $this->message[] = [
-                'type' => MessageType::TEXT,
+                'type' => 'text',
                 'text' => "iaiaiaiai",
             ];
         }
 
-        return $this->message;
+        $result = $bot->buildMessage();
+	 return $result->getHTTPStatus(). ' '. $result->getRawBody();
     }
 }
 
