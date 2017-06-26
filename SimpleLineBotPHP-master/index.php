@@ -51,7 +51,7 @@ $app->post('/', function ($request, $response)
         foreach ($this->texts as $text) {
             $this->message[] = [
                 'type' => MessageType::TEXT,
-                'text' => $this,
+                'text' => "iaiaiaiai",
             ];
         }
 
