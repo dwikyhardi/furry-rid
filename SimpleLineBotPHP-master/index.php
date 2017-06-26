@@ -53,7 +53,7 @@ foreach ($httpClient->parseEvents() as $event) {
                         'messages' => array(
                             array(
                                 'type' => 'text',
-                                'text' => $message["kkkkkkkkk"]
+                                'text' => "asddddddddddddddddd"
                             )
                         )
                     ));
