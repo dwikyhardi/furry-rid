@@ -42,18 +42,33 @@ $app->post('/', function ($request, $response)
 
   $data = json_decode($body, true);
 
-  foreach ($data['events'] as $event) {
-    if ($event['type'] == 'message') {
-      if($event['message']['type'] == 'text') {
-        // send same message as reply to user
-        $result = $bot->replyText($event['replyToken'],
-  $event['message']['text']);
-        return $result->getHTTPStatus() . ' ' . 'dwiky' .
-    $result->getRawBody();
-      }
+foreach ($httpClient->parseEvents() as $event) {
+    switch ($event['type']) {
+        case 'message':
+            $message = $event['message'];
+            switch ($message['type']) {
+                case 'text':
+                    $client->replyMessage(array(
+                        'replyToken' => $event['replyToken'],
+                        'messages' => array(
+                            array(
+                                'type' => 'text',
+                                'text' => $message['text']
+                            )
+                        )
+                    ));
+                    break;
+                default:
+                    error_log("Unsupporeted message type: " . $message['type']);
+                    break;
+            }
+            break;
+        default:
+            error_log("Unsupporeted event type: " . $event['type']);
+            break;
     }
-  }
-});
+};
+
 
  $app->get('/push/{to}/{message}', function ($request, $response, $args)
  {
