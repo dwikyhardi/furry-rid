@@ -42,32 +42,22 @@ $app->post('/', function ($request, $response)
 
   $data = json_decode($body, true);
 
-foreach ($httpClient->parseEvents() as $event) {
-    switch ($event['type']) {
-        case 'message':
-            $message = $event['message'];
-            switch ($message['type']) {
-                case 'text':
-                    $client->replyMessage(array(
-                        'replyToken' => $event['replyToken'],
-                        'messages' => array(
-                            array(
-                                'type' => 'text',
-                                'text' => "asddddddddddddddddd"
-                            )
-                        )
-                    ));
-                    break;
-                default:
-                    error_log("Unsupporeted message type: " . $message['type']);
-                    break;
-            }
-            break;
-        default:
-            error_log("Unsupporeted event type: " . $event['type']);
-            break;
+ public function buildMessage()
+    {
+        if (!empty($this->message)) {
+            return $this->message;
+        }
+
+        foreach ($this->texts as $text) {
+            $this->message[] = [
+                'type' => MessageType::TEXT,
+                'text' => $this,
+            ];
+        }
+
+        return $this->message;
     }
-};
+}
 
 
 // $app->get('/push/{to}/{message}', function ($request, $response, $args)
