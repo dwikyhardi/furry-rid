@@ -16,7 +16,7 @@ $app = new Slim\App($configs);
 
 /* ROUTES */
 $app->get('/', function ($request, $response) {
-	return "Aing Pusing!!!!!";
+	return "Lanjutkan!";
 });
 
 $app->post('/', function ($request, $response)
@@ -48,23 +48,21 @@ $app->post('/', function ($request, $response)
         // send same message as reply to user
         $result = $bot->replyText($event['replyToken'],
   $event['message']['text']);
-        return $result->getHTTPStatus() . ' ' . '' .
+        return $result->getHTTPStatus() . ' ' . 'dwiky' .
     $result->getRawBody();
       }
     }
   }
 });
 
-// $app->get('/push/{to}/{message}', function ($request, $response, $args)
-// {
-// 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
-// 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-
-// 	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($args['message']);
-// 	$result = $bot->pushMessage($args['to'], $textMessageBuilder);
-
-// 	return $result->getHTTPStatus() . ' ' . $result->getRawBody();
-// });
+ $app->get('/push/{to}/{message}', function ($request, $response, $args)
+ {
+ 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
+	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
+	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($args['message']);
+ 	$result = $bot->pushMessage($args['to'], $textMessageBuilder);
+ 	return $result->getHTTPStatus() . ' ' . $result->getRawBody();
+ });
 
 /* JUST RUN IT */
 $app->run();
